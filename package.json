@@ -4,7 +4,7 @@
   "description": "Convert VB.Net POCOs to typescript",
   "version": "0.0.2",
   "publisher": "Maximaximum",
-  "main": "./out/src/vb2ts.ts",
+  "main": "./out/src/vb2ts.js",
   "scripts": {
     "prepublish": "tsc -p ./",
     "compile": "tsc -watch -p ./",
