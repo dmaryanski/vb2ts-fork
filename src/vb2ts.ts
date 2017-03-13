@@ -105,6 +105,76 @@ function vbClassEnd(code: string): Match {
     };
 }
 
+function vbEnum(code: string): Match {
+    let patt = /Public\s+Enum\s+(\S+)[^\S\r\n]*(?=\r\n?|\n)([\S\s]*)End\s+Enum[^\S\r\n]*(?=\r\n?|\n)/;
+    let arr = patt.exec(code);
+
+    if (!arr) {
+        return null;
+    }
+    let name = arr[1];
+    let contents = arr[2];
+    let convertedContents = vbEnum2ts(contents);
+
+    return {
+        result: `export enum ${name} {${convertedContents}}`,
+        index: arr.index,
+        length: arr[0].length
+    };
+}
+
+function vbEnum2ts(code: string) {
+    var ret: string[] = [];
+    var lineArr: RegExpExecArray;
+    var lastAddedLineJump = true;
+
+    let index = 0, match;
+    while (true) {
+        var nextMatch = findEnumMatch(code, index);
+        if (nextMatch == null)
+            break;
+        //add the last unmatched code:
+        ret.push(code.substr(index, nextMatch.index - index));
+
+        //add the matched code:
+        ret.push(nextMatch.result);
+
+        //increment the search index:
+        index = nextMatch.index + nextMatch.length;
+    }
+
+    for (let i = 1; i < ret.length - 2; i+= 2) {
+        ret[i] += ",";
+    }
+
+    //add the last unmatched code:
+    ret.push(code.substr(index));
+
+    return ret.join("");
+}
+
+/**
+ * This is an internal function that only parses the inner contents of an enum.
+ * @param code The vb.net Enum contents code (which is between 'Public Enum x' and 'End Enum')
+ */
+function enumContents(code: string): Match {
+    let literalsPatt = /(\w+)\s*=\s*([\d-]+)/;
+    let arr = literalsPatt.exec(code);
+
+    if (!arr) {
+        return null;
+    }
+
+    let name = arr[1];
+    let value = arr[2];
+
+    return {
+        result: `${name} = ${value}`,
+        index: arr.index,
+        length: arr[0].length
+    };
+}
+
 function singleLineComment(code: string): Match {
     var patt = /'(.*)/;
     var arr = patt.exec(code);
@@ -159,11 +229,34 @@ function findMatch(code: string, startIndex: number): Match {
         vbNamespaceEnd,
         vbClassStart,
         vbClassEnd,
+        vbEnum,
         vbProperty,
         documentationComments,
         singleLineComment,
         imports,
         attribute
+    ];
+
+    var firstMatch: Match = null;
+    for (let i = 0; i < functions.length; i++) {
+        var match = functions[i](code);
+        if (match != null && (firstMatch == null || match.index < firstMatch.index)) {
+            firstMatch = match;
+        }
+    }
+
+    return firstMatch ? {
+        result: firstMatch.result,
+        index: firstMatch.index + startIndex,
+        length: firstMatch.length
+    } : null;
+}
+
+function findEnumMatch(code: string, startIndex: number): Match {
+    code = code.substr(startIndex);
+
+    var functions: ((code: string) => Match)[] = [
+        enumContents
     ];
 
     var firstMatch: Match = null;
