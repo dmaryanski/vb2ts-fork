@@ -24,7 +24,8 @@ function vbProperty(code: string): Match {
     return {
         result: generateTypescriptProperty(type, name),
         index: arr.index,
-        length: arr[0].length
+        length: arr[0].length,
+        type: 'property'
     };
 }
 
@@ -40,7 +41,8 @@ function vbNamespaceStart(code: string): Match {
     return {
         result: `namespace ${name} {`,
         index: arr.index,
-        length: arr[0].length
+        length: arr[0].length,
+        type: 'namespace'
     };
 }
 
@@ -56,7 +58,8 @@ function vbNamespaceEnd(code: string): Match {
     return {
         result: "}",
         index: arr.index,
-        length: arr[0].length
+        length: arr[0].length,
+        type: 'namespace-end'
     };
 }
 
@@ -71,7 +74,8 @@ function imports(code: string): Match {
     return {
         result: "",
         index: arr.index,
-        length: arr[0].length
+        length: arr[0].length,
+        type: 'ímports'
     };
 }
 
@@ -87,7 +91,8 @@ function vbClassStart(code: string): Match {
     return {
         result: `export interface ${name}${baseClassName ? " extends " + baseClassName : ""} {${eof}`,
         index: arr.index,
-        length: arr[0].length
+        length: arr[0].length,
+        type: 'class'
     };
 }
 
@@ -101,7 +106,8 @@ function vbClassEnd(code: string): Match {
     return {
         result: `}`,
         index: arr.index,
-        length: arr[0].length
+        length: arr[0].length,
+        type: 'class-end'
     };
 }
 
@@ -119,38 +125,9 @@ function vbEnum(code: string): Match {
     return {
         result: `export enum ${name} {${convertedContents}}`,
         index: arr.index,
-        length: arr[0].length
+        length: arr[0].length,
+        type: 'enum'
     };
-}
-
-function vbEnum2ts(code: string) {
-    var ret: string[] = [];
-    var lineArr: RegExpExecArray;
-    var lastAddedLineJump = true;
-
-    let index = 0, match;
-    while (true) {
-        var nextMatch = findEnumMatch(code, index);
-        if (nextMatch == null)
-            break;
-        //add the last unmatched code:
-        ret.push(code.substr(index, nextMatch.index - index));
-
-        //add the matched code:
-        ret.push(nextMatch.result);
-
-        //increment the search index:
-        index = nextMatch.index + nextMatch.length;
-    }
-
-    for (let i = 1; i < ret.length - 2; i+= 2) {
-        ret[i] += ",";
-    }
-
-    //add the last unmatched code:
-    ret.push(code.substr(index));
-
-    return ret.join("");
 }
 
 /**
@@ -171,7 +148,8 @@ function enumContents(code: string): Match {
     return {
         result: `${name} = ${value}`,
         index: arr.index,
-        length: arr[0].length
+        length: arr[0].length,
+        type: 'enum-contents'
     };
 }
 
@@ -183,7 +161,8 @@ function singleLineComment(code: string): Match {
     return {
         result: `// ${arr[1]}`,
         index: arr.index,
-        length: arr[0].length
+        length: arr[0].length,
+        type: 'single-line-comment'
     };
 }
 
@@ -195,7 +174,8 @@ function documentationComments(code: string): Match {
     return {
         result: `///${arr[1]}`,
         index: arr.index,
-        length: arr[0].length
+        length: arr[0].length,
+        type: 'documentation-comments'
     };
 }
 
@@ -207,7 +187,8 @@ function attribute(code: string): Match {
     return {
         result: "",
         index: arr.index,
-        length: arr[0].length
+        length: arr[0].length,
+        type: 'attribute'
     };
 }
 
@@ -218,6 +199,7 @@ interface Match {
     index: number;
     /**Original lenght */
     length: number;
+    type: string;
 }
 
 /**Find the next match */
@@ -248,7 +230,8 @@ function findMatch(code: string, startIndex: number): Match {
     return firstMatch ? {
         result: firstMatch.result,
         index: firstMatch.index + startIndex,
-        length: firstMatch.length
+        length: firstMatch.length,
+        type: firstMatch.type
     } : null;
 }
 
@@ -256,7 +239,9 @@ function findEnumMatch(code: string, startIndex: number): Match {
     code = code.substr(startIndex);
 
     var functions: ((code: string) => Match)[] = [
-        enumContents
+        enumContents,
+        documentationComments,
+        singleLineComment
     ];
 
     var firstMatch: Match = null;
@@ -270,8 +255,41 @@ function findEnumMatch(code: string, startIndex: number): Match {
     return firstMatch ? {
         result: firstMatch.result,
         index: firstMatch.index + startIndex,
-        length: firstMatch.length
+        length: firstMatch.length,
+        type: firstMatch.type
     } : null;
+}
+
+function vbEnum2ts(code: string) {
+    var ret: string[] = [];
+    var lineArr: RegExpExecArray;
+    var lastAddedLineJump = true;
+
+    let index = 0, match, lastMember;
+    while (true) {
+        var nextMatch = findEnumMatch(code, index);
+        if (nextMatch == null)
+            break;
+        //add the last unmatched code:
+        ret.push(code.substr(index, nextMatch.index - index));
+
+        //add the matched code:
+        ret.push(nextMatch.result + (nextMatch.type == "enum-contents" ? "," : ""));
+
+        if (nextMatch.type == "enum-contents") {
+            lastMember = ret.length - 1;
+        }
+
+        //increment the search index:
+        index = nextMatch.index + nextMatch.length;
+    }
+
+    ret[lastMember] = ret[lastMember].substr(0, ret[lastMember].length - 1);
+
+    //add the last unmatched code:
+    ret.push(code.substr(index));
+
+    return ret.join("");
 }
 
 /**Convert c# code to typescript code */
