@@ -79,7 +79,13 @@ suite("vb2ts Tests", () => {
     let vbFileNames = fs.readdirSync(vbDataDir);
     for (let vbFileName of vbFileNames) {
         let vbDeclaration = fs.readFileSync(vbDataDir + vbFileName).toString();
-        let tsDeclaration = fs.readFileSync(tsDataDir + path.basename(vbFileName, ".vb") + ".ts").toString();
+        let tsDeclaration;
+        try {
+            tsDeclaration = fs.readFileSync(tsDataDir + path.basename(vbFileName, ".vb") + ".ts").toString();
+        } catch (ex) {
+            let newEx = `The ${path.basename(vbFileName, ".vb")}.ts file that should correspond to ${vbFileName} file does not exist.`;
+            throw newEx;
+        }
 
         test(vbFileName, () => {
             assert.equal(vb2ts(vbDeclaration), tsDeclaration, vbFileName);
