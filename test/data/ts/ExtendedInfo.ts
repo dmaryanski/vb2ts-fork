@@ -1,8 +1,8 @@
 namespace TestDataNamespace {
   export interface ExtendedInfo extends MainObject {
-    /// <summary>
-    /// The current status of the Object
-    /// </summary>
+    /**
+     * The current status of the Object
+     */
     /// <value></value>
     /// <returns></returns>
     /// <remarks>

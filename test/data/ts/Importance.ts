@@ -1,7 +1,7 @@
 ﻿namespace TestDataNamespace {
-  /// <summary>
-  /// The importance of the items
-  /// </summary>
+  /**
+   * The importance of the items
+   */
   /// <remarks></remarks>
   export enum Importance {
     Needs = 0,

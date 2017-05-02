@@ -2,8 +2,19 @@ Imports System.ComponentModel.DataAnnotations
 
 Namespace TestDataNamespace
   Public Class MainObject
+    ''' <summary>
+    ''' If the object is actually an object, this is the id of the containing MainObject.
+    ''' If the object is actually a body, this is the id of the body.
+    ''' If the object is actually a fake object, this value is 0.
+    ''' </summary>
     Public Property MainObjectID As Integer
+    ''' <summary>
+    ''' The Id of the jungle. If the object is actually a MainObject, this field is null.
+    ''' </summary>
     Public Property JungleID As Integer?
+    ''' <summary>
+    ''' The id of the parent jungle. If the object is actually a MainObject, or if it is a root object of a MainObject, this field is null.
+    ''' </summary>
     Public Property ParentJungleID As Integer?
 
     Public Property Name As String

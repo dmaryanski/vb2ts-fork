@@ -1,24 +1,24 @@
 ﻿namespace TestDataNamespace {
-  /// <summary>
-  /// The current base of a check
-  /// </summary>
+  /**
+   * The current base of a check
+   */
   export enum CheckBase {
     Unverified = -2,
-    /// <summary>
-    /// The check went to review but was updated
-    /// </summary>
+    /**
+     * The check went to review but was updated
+     */
     Updated = -1,
-    /// <summary>
-    /// The check is still open
-    /// </summary>
+    /**
+     * The check is still open
+     */
     Open = 0,
-    /// <summary>
-    /// The check is totally done
-    /// </summary>
+    /**
+     * The check is totally done
+     */
     Done = 1,
-    /// <summary>
-    /// All owners of the check have confirmed it's Ok to pay for
-    /// </summary>
+    /**
+     * All owners of the check have confirmed it's Ok to pay for
+     */
     Confirmed = 2
   }
 }

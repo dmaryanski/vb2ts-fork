@@ -1,19 +1,19 @@
 ﻿namespace TestDataNamespace {
-  /// <summary>
-  /// The current status of the World
-  /// </summary>
+  /**
+   * The current status of the World
+   */
   export enum WorldStatus {
-    /// <summary>
-    /// The world is open to be edited
-    /// </summary>
+    /**
+     * The world is open to be edited
+     */
     Open = 0,
-    /// <summary>
-    /// All planets have been closed
-    /// </summary>
+    /**
+     * All planets have been closed
+     */
     Closed = 1,
-    /// <summary>
-    /// All items on the planets are too huge to continue
-    /// </summary>
+    /**
+     * All items on the planets are too huge to continue
+     */
     Continued = 2,
     Unknown = -1
   }

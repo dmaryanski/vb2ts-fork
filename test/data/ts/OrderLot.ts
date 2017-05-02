@@ -5,9 +5,9 @@ namespace TestDataNamespace {
     Budget: number;
     Manager: User;
 
-    /// <summary>
-    /// The current status of the order
-    /// </summary>
+    /**
+     * The current status of the order
+     */
     /// <value></value>
     /// <returns></returns>
     /// <remarks>

@@ -11,9 +11,9 @@ namespace TestDataNamespace {
     Status: string;
     HasSomething: boolean;
 
-    /// <summary>
-    /// The priority of the item
-    /// </summary>
+    /**
+     * The priority of the item
+     */
     /// <value></value>
     /// <returns></returns>
     /// <remarks>
