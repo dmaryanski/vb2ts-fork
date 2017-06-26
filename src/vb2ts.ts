@@ -135,7 +135,7 @@ function vbEnum(code: string): Match {
  * @param code The vb.net Enum contents code (which is between 'Public Enum x' and 'End Enum')
  */
 function enumContents(code: string): Match {
-    let literalsPatt = /(\w+)\s*=\s*([\d-]+)/;
+    let literalsPatt = /(\w+)(?:\s*=\s*([\d-]+))?/;
     let arr = literalsPatt.exec(code);
 
     if (!arr) {
@@ -146,7 +146,7 @@ function enumContents(code: string): Match {
     let value = arr[2];
 
     return {
-        result: `${name} = ${value}`,
+        result: value !== undefined ? `${name} = ${value}` : `${name}`,
         index: arr.index,
         length: arr[0].length,
         type: 'enum-contents'
