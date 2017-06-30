@@ -2,7 +2,7 @@
   "name": "vb2ts",
   "displayName": "vb2ts",
   "description": "Convert VB.Net POCOs to typescript",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "publisher": "Maximaximum",
   "main": "./out/src/vb2ts.js",
   "scripts": {
