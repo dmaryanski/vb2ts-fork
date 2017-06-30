@@ -1,4 +1,4 @@
-Namespace Models
+Namespace TestDataNamespace
   Public Enum ObjectType
     Baby
     Child
