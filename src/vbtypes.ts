@@ -25,7 +25,7 @@ export class VbType {
         var dictionaries = ["Dictionary", "IDictionary"];
 
         var bools = ["bool", "Boolean", "System.Boolean"];
-        var strings = ["String", "Char"];
+        var strings = ["String", "Char", "Guid"];
         var numbers = [
             "Integer", "Double",
             'int', "Int32", "System.Int32",
@@ -147,7 +147,7 @@ interface VbArray {
 }
 
 /**Split on top level by a given separator, separators inside < >, [ ], { } or ( ) groups are not considered
- * 
+ *
  * @param separator One char separators
  */
 function splitTopLevel(text: string, separators: string[], openGroup: string[], closeGroup: string[]): string[] {
