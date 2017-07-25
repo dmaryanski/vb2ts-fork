@@ -374,28 +374,43 @@ function vbDocSummary2Ts(code: string) {
     return ret.join("");
 }
 
-/**Convert c# code to typescript code */
-export default function vb2ts(code: string): string {
-    var ret = "";
-    var lineArr: RegExpExecArray;
-    var lastAddedLineJump = true;
+export interface Vb2TsOptions {
+    ignoreNamespace?: boolean;
+}
 
-    var index = 0;
-    while (true) {
-        var nextMatch = findMatch(code, index);
-        if (nextMatch == null)
-            break;
+export class Vb2Ts {
+    public Convert = (code: string, options?: Vb2TsOptions): string => {
+        options = Object.assign({}, this.defaultOptions, options);
+
+        var ret = "";
+        var lineArr: RegExpExecArray;
+        var lastAddedLineJump = true;
+
+        var index = 0;
+        while (true) {
+            var nextMatch = findMatch(code, index);
+            if (nextMatch == null)
+                break;
+            //add the last unmatched code:
+            ret += code.substr(index, nextMatch.index - index);
+
+            //add the matched code:
+            ret += nextMatch.result;
+
+            //increment the search index:
+            index = nextMatch.index + nextMatch.length;
+        }
         //add the last unmatched code:
-        ret += code.substr(index, nextMatch.index - index);
+        ret += code.substr(index);
 
-        //add the matched code:
-        ret += nextMatch.result;
-
-        //increment the search index:
-        index = nextMatch.index + nextMatch.length;
+        return ret;
     }
-    //add the last unmatched code:
-    ret += code.substr(index);
+    private defaultOptions = {
+        ignoreNamespace: false
+    }
+}
 
-    return ret;
+/**Convert vb.net code to typescript code */
+export default function vb2ts(code: string, options?: Vb2TsOptions): string {
+    return new Vb2Ts().Convert(code, options);
 }
