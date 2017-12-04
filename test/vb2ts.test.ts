@@ -88,7 +88,15 @@ suite("vb2ts Tests", () => {
         }
 
         test(vbFileName, () => {
-            assert.equal(vb2ts(vbDeclaration), tsDeclaration, vbFileName);
+          const actual = vb2ts(vbDeclaration);
+          const expected = tsDeclaration;
+
+          if (actual != expected) {
+            fs.writeFileSync(vbFileName + '-actual', vb2ts(vbDeclaration));
+            fs.writeFileSync(vbFileName + '-expected', tsDeclaration);
+          }
+
+          assert.equal(actual, expected, vbFileName);
         });
     }
 });
