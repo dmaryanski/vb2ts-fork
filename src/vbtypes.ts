@@ -27,7 +27,7 @@ export class VbType {
         var bools = ["bool", "Boolean", "System.Boolean"];
         var strings = ["String", "Char", "Guid"];
         var numbers = [
-            "Integer", "Double",
+            "Integer", "Double", "Long",
             'int', "Int32", "System.Int32",
             'float', "Single", "System.Single",
             'decimal', "Decimal", "System.Decimal",
