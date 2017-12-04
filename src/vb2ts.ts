@@ -47,7 +47,7 @@ export class Vb2Ts {
 
   /**Convert a vb.net property to a typescript property */
   private vbProperty = (code: string): Match => {
-    let patt = /Public\s+(?:(?:MustInherit\s+)|(?:NotInheritable\s+)|(?:MustOverride\s+)|(?:Overridable\s+)|(?:Overrides\s+))?Property\s+(?:(?=\[\S+\])\[(\S+)\]|(?!\[\S+\])(\S+))\s+As\s+(?:New)?\s*(.+)[^\S\r\n]*(?=\r\n?|\n)/;
+    let patt = /Public\s+(?:(?:MustInherit\s+)|(?:NotInheritable\s+)|(?:MustOverride\s+)|(?:Overridable\s+)|(?:Overrides\s+)|(?:Overloads\s+))?Property\s+(?:(?=\[\S+\])\[(\S+)\]|(?!\[\S+\])(\S+))\s+As\s+(?:New)?\s*(.+)[^\S\r\n]*(?=\r\n?|\n)/;
     let arr = patt.exec(code);
 
     if (!arr) {
