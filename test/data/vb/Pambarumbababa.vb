@@ -1,4 +1,4 @@
-Namespace Models
+Namespace TestDataNamespace
   Public Class Pambarumbababa
     Inherits Sample1
 
