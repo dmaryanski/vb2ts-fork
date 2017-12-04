@@ -1,6 +1,6 @@
 namespace TestDataNamespace {
   export interface Pambarumbababa extends Sample1 {
-    Type: WhyType;
+    PotType: WhyType;
     HamCurrency: Importance;
     RoundQuantityFirst: boolean;
     RoundingType: ObjectType;
