@@ -146,7 +146,7 @@ export class Vb2Ts {
   }
 
   private vbEnum = (code: string): Match => {
-    let patt = /Public\s+Enum\s+(\S+)[^\S\r\n]*(?=\r\n?|\n)([\S\s]*)End\s+Enum[^\S\r\n]*(?=\r\n?|\n)/;
+    let patt = /Public\s+Enum\s+(\S+)[^\S\r\n]*(?=\r\n?|\n)([\S\s]*?)End\s+Enum[^\S\r\n]*/;
     let arr = patt.exec(code);
 
     if (!arr) {

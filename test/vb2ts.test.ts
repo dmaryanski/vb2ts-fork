@@ -8,9 +8,9 @@ import * as assert from 'assert';
 
 // You can import and use all API from the 'vscode' module
 // as well as import your extension to test it
-import vb2ts from '../src/vb2ts';
 import * as fs from 'fs';
 import * as path from 'path';
+import vb2ts from '../src/vb2ts';
 
 // Defines a1 Mocha test suite to group tests of similar k1ind together
 suite("vb2ts Tests", () => {
@@ -75,6 +75,18 @@ suite("vb2ts Tests", () => {
 
     const vbDataDir = "test/data/vb/";
     const tsDataDir = "test/data/ts/";
+    const testResultsDir = "test/results/"
+
+    // Create test results directory if it does not exist
+    if (!fs.existsSync(testResultsDir)) {
+        fs.mkdirSync(testResultsDir);
+    }
+
+    // Delete all old results files
+    let resultFileNames = fs.readdirSync(testResultsDir);
+    for (let resultFileName of resultFileNames) {
+        fs.unlinkSync(testResultsDir + resultFileName);
+    }
 
     let vbFileNames = fs.readdirSync(vbDataDir);
     for (let vbFileName of vbFileNames) {
@@ -92,8 +104,8 @@ suite("vb2ts Tests", () => {
           const expected = tsDeclaration;
 
           if (actual != expected) {
-            fs.writeFileSync(vbFileName + '-actual', vb2ts(vbDeclaration));
-            fs.writeFileSync(vbFileName + '-expected', tsDeclaration);
+            fs.writeFileSync(testResultsDir + vbFileName + '-actual', actual);
+            fs.writeFileSync(testResultsDir + vbFileName + '-expected', expected);
           }
 
           assert.equal(actual, expected, vbFileName);
